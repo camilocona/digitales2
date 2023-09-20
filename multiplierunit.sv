@@ -42,7 +42,22 @@ module multiplierunit (dataA, dataB, dataR);
 	end 
 	else begin
 		shifted_product = shifted_product <<2;
-	
+	//CASOS ESPECIALES	
+	caso_a=(dataA ==32'h00000000 | dataB == 32'h00000000);
+	caso_b=(dataA== 32'h7F800000 | dataA == 32'hFF800000 | dataB == 32'h7F800000 | dataB == 32'hFF800000 );
+	caso_c=(dataA ==32'h7FC00000 | dataB == 32'h7FC00000);
+	caso_d=((dataA >= 32'h7F800000 && dataA <= 32'hFFFFFFFF) | dataB >= 32'h7F800000 && dataB <= 32'hFFFFFFFF );
+	//ASIGNAR RESULTADOS PARA CASOS ESPECIALES
+	if (caso_a) begin
+		dataR = 32'h00000000; // Más o menos cero
+	end else if (caso_b) begin
+		dataR = caso_c ? 32'h7FC00000 : (sig_A ^ sig_B) ? 32'hFF800000 : 32'h7F800000; //Más o menos inf o NaN
+	end else if (caso_c) begin
+		dataR = 32'h7FC00000; //NaN
+	end else if (caso_d) begin
+		dataR = 32'h7FC00000; //NaN
+	end 
+
 endmodule
 
 // ***************************** 
@@ -87,72 +102,4 @@ module tb_multiplierunit();
     $display("dataA = %h, dataB = %h, dataR = %h", dataA, dataB, dataR);
   end
 
-endmodule
-
-
-
-
-
-
-
-
-
-
-
-// ******************* 
-// Get Operands Module
-// ******************* 
-module peripheral_getoperands (clk, reset, inputdata, enterpulse, datainput_i, dataA, dataB);
-	input logic clk, reset;
-	input logic [7:0] inputdata; //switch para A y B
-	input logic enterpulse; //pulso
-	input logic [3:0] datainput_i; //REGISTROS DE 8 BITS 
-	output logic [31:0] dataA, dataB; //A y B
-
-	// Internal signals
-	logic intPulse;
-	logic [2:0] cnt;
-	logic [2:0] pos;
-	
-	// Parallel circuits
-	assign a = enterpulse; //Pulsos
-	peripheral_pulse pp (enterpulse, clk, reset, intPulse);
-	//deco7seg_hexa deco0 (cnt, disp);
-	
-	// Counter process. Activates each time intPulse is 1'b1
-	always_ff @(posedge clk, posedge reset) begin
-		if (reset)
-			cnt <= 0;
-		else if (intPulse)
-			cnt <= cnt + 1;
-	end
-	assign pos = cnt; //No se a que variable asignarle el conteo
-	
-	/*000 -0
-	  001 -1
-	  010 -2
-	  011 -3
-	  100 -4
-	  101 -5
-	  110 -6
-	  111 -7*/
-	
-	always @(posedge clk, posedge rst) begin
-        if (rst) begin
-            dataA <= 32'b0;
-            dataB <= 32'b0;
-            datainput_i[0] <= 8'b0;//A menos significativas
-            datainput_i[1] <= 8'b0;
-            datainput_i[2] <= 8'b0;
-            datainput_i[3] <= 8'b0;//A mas significativas
-				end
-			else begin
-				 if(enterpulse) begin
-				 datainput_i[pos]=inputdata;
-				 end
-				 dataA <= {dataA[23:0], datainput_i[3:0]};
-				 dataB <= {dataB[23:0], datainput_i[3:0]};
-              end
-
-	
-endmodule			
+endmodule		
