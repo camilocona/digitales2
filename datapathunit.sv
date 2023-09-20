@@ -1,28 +1,79 @@
-// ******************** 
+// ****************** 
 // Datapath Unit Module
-// ******************** 
+// ****************** 
 module datapathunit (clk, reset, enter, inputdata,
 						   loaddata, inputdata_ready,
 						   disp3, disp2, disp1, disp0);
 	input logic  clk, reset, enter;
-	input logic  [7:0] inputdata;
-	input logic  loaddata;
+	input logic  [7:0] inputdata; //switch
+	input logic  loaddata; 
 	output logic inputdata_ready;
-	output logic [6:0] disp3, disp2, disp1, disp0;
+	output logic [6:0] disp3, disp2, disp1, disp0; 
 
 	// Internal signals and module instantiation for multiplier unit
-	// WRITE HERE YOUR CODE
+	logic [31:0] dataA, dataB, dataR;
+	
 	
 	// Internal signals and module instantiation for peripherals unit
 	// WRITE HERE YOUR CODE
 endmodule
 
-// *************************** 
+
+// ************************* 
 // Testbench for Datapath Unit
-// *************************** 
+// ************************* 
 module tb_datapathunit ();
-	// WRITE HERE YOUR CODE
+  // Testbench signals
+  logic clk;
+  logic reset;
+  logic enter;
+  logic [7:0] inputdata;
+  logic loaddata;
+  logic inputdata_ready;
+  logic [6:0] disp3;
+  logic [6:0] disp2;
+  logic [6:0] disp1;
+  logic [6:0] disp0;
+
+  // Instantiate the datapathunit module
+  datapathunit dut (
+    .clk(clk),
+    .reset(reset),
+    .enter(enter),
+    .inputdata(inputdata),
+    .loaddata(loaddata),
+    .inputdata_ready(inputdata_ready),
+    .disp3(disp3),
+    .disp2(disp2),
+    .disp1(disp1),
+    .disp0(disp0)
+  );
+
+  // Clock generation
+  initial begin
+    clk = 0;
+    forever #5 clk = ~clk;
+  end
+
+  // Testbench logic
+  initial begin
+    // Initialize testbench signals
+    reset = 0;
+    enter = 0;
+    inputdata = 8'b0;
+    loaddata = 0;
+
+    // Apply reset
+    reset = 1;
+    #10 reset = 0;
+
+    // Your testbench scenarios here
+
+    // End simulation
+    #100 $finish;
+  end
+
+  // Your testbench stimulus and checks here
+  // WRITE HERE YOUR TESTBENCH CODE
+
 endmodule
-
-
-hola
