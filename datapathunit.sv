@@ -1,6 +1,6 @@
-// ****************** 
+// ******************** 
 // Datapath Unit Module
-// ****************** 
+// ******************** 
 module datapathunit (clk, reset, enter, inputdata,
 						   loaddata, inputdata_ready,
 						   disp3, disp2, disp1, disp0);
@@ -12,16 +12,16 @@ module datapathunit (clk, reset, enter, inputdata,
 
 	// Internal signals and module instantiation for multiplier unit
 	logic [31:0] dataA, dataB, dataR;
+	multiplierunit  mult0 (dataA, dataB, dataR);
 	
 	
 	// Internal signals and module instantiation for peripherals unit
-	// WRITE HERE YOUR CODE
-endmodule
+	peripherals perip0 (clk, reset, enter, inputdata, loaddata, inputdata_ready, dataA, dataB, dataR, disp3, disp2, disp1, disp0);
 
 
-// ************************* 
+// *************************** 
 // Testbench for Datapath Unit
-// ************************* 
+// *************************** 
 module tb_datapathunit ();
   // Testbench signals
   logic clk;
@@ -36,18 +36,7 @@ module tb_datapathunit ();
   logic [6:0] disp0;
 
   // Instantiate the datapathunit module
-  datapathunit dut (
-    .clk(clk),
-    .reset(reset),
-    .enter(enter),
-    .inputdata(inputdata),
-    .loaddata(loaddata),
-    .inputdata_ready(inputdata_ready),
-    .disp3(disp3),
-    .disp2(disp2),
-    .disp1(disp1),
-    .disp0(disp0)
-  );
+  datapathunit dut (clk, reset,enter,inputdata,loaddata,inputdata_ready,disp3,disp2,disp1,disp0);
 
   // Clock generation
   initial begin
@@ -77,3 +66,5 @@ module tb_datapathunit ();
   // WRITE HERE YOUR TESTBENCH CODE
 
 endmodule
+
+  
