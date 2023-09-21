@@ -65,17 +65,7 @@ module tb_topunit ();
   logic [6:0] disp0;
 
   // Instantiate the top module
-  top dut (
-    .clk(clk),
-    .nreset(nreset),
-    .nenter(nenter),
-    .inputdata(inputdata),
-    .disp3(disp3),
-    .disp2(disp2),
-    .disp1(disp1),
-    .disp0(disp0)
-  );
-
+  top ins(clk, nreset, nenter, inputdata, disp3, disp2, disp1, disp0);
   // Clock generation
   initial begin
     clk = 0;
