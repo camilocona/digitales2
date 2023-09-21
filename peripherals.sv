@@ -40,27 +40,39 @@ module peripherals (clk, reset, enter, inputdata,
           default: data_register <= data_register; // No debería ocurrir
         endcase
       end
-	
 	// Controlar la selección de A, B o R y el byte dentro de ellos
       if (loaddata && enterpulse) begin
         // Solo actualizar si loaddata y enter están activados
         case (data_index)
-          2'b00: dataA[byte_index*8 +: 8] <= data_register[7:0];
-          2'b01: dataB[byte_index*8 +: 8] <= data_register[7:0];
-          2'b10: dataR[byte_index*8 +: 8] <= data_register[7:0];
-          default: dataA[byte_index*8 +: 8] <= dataA[byte_index*8 +: 8]; // No debería ocurrir
-        endcase
+		  //Esto indica que se está asignando un rango de 8 bits consecutivos, comenzando desde el resultado de byte_index * 8.
+		  // si byte_index es 2, la expresión byte_index*8 sería igual a 16. Entonces, la asignación sería dataA[16 +: 8], que asigna los bits del 16 al 23 de data_register al rango de bits 16
+          2'b00: begin 
+			 dataA[byte_index*8 +: 8] <= data_register[7:0];  // Si data_index es 2'b00, esta línea asigna los bits 7:0 de data_register a un segmento específico de dataA.
+			 end 
+			
+          2'b01: begin 
+			 dataB[byte_index*8 +: 8] <= data_register[7:0];// Si data_index es 2'b01, esta línea asigna los bits 7:0 de data_register a un segmento específico de dataB. 
+			 end
+          2'b10: begin 
+			 dataR[byte_index*8 +: 8] <= data_register[7:0]; // Si data_index es 2'b10, esta línea asigna los bits 7:0 de data_register a un segmento específico de dataR.
+			 end
+          default: dataA[byte_index*8 +: 8] <= dataA[byte_index*8 +: 8];// En caso de que data_index no coincida con ninguno de los casos anteriores, esta línea es una asignación trivial y no debería ocurrir en condiciones normales.
+			endcase
+			end
+			
+			
         byte_index <= byte_index + 1; // Avanzar al siguiente byte
         if (byte_index == 4'b0100) begin
           // Si llegamos al último byte, cambiar de registro
           byte_index <= 4'b0000;
-          data_index <= data_index + 1;
+          data_index <= data_index + 1; end
           if (data_index == 2'b11) begin
             // Si llegamos a R, indicar que los datos están listos (default)
             inputdata_ready <= 1'b1;
           end
         end
-      end else begin
+   
+		else begin
         // Si no estamos cargando datos,inputdata_ready es 0
         inputdata_ready <= 1'b0;
       end
