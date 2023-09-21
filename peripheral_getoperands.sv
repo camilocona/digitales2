@@ -5,7 +5,7 @@ module peripheral_getoperands (clk, reset, inputdata, enterpulse, datainput_i, d
 	input logic clk, reset;
 	input logic [7:0] inputdata; //switch para A y B
 	input logic enterpulse; //pulso
-	input logic [3:0] datainput_i; //REGISTROS DE 8 BITS 
+	output logic [3:0] datainput_i; //REGISTROS DE 8 BITS 
 	output logic [31:0] dataA, dataB; //A y B
 
 	// Internal signals
@@ -36,8 +36,8 @@ module peripheral_getoperands (clk, reset, inputdata, enterpulse, datainput_i, d
 	  110 -6
 	  111 -7*/
 	
-	always @(posedge clk, posedge rst) begin
-        if (rst) begin
+	always @(posedge clk, posedge reset) begin
+        if (reset) begin
             dataA <= 32'b0;
             dataB <= 32'b0;
             datainput_i[0] <= 8'b0;//A menos significativas
@@ -51,8 +51,7 @@ module peripheral_getoperands (clk, reset, inputdata, enterpulse, datainput_i, d
 				 end
 				 // se utiliza para cargar un nuevo byte de datos en los bits menos significativos de operand_A mientras se desplazan los bits anteriores hacia la izquierda.
 				 dataA <= {dataA[23:0], datainput_i[3:0]}; 
-				 dataB <= {dataB[23:0], datainput_i[3:0]};
-              end
-
-	
-endmodule					
+				 dataB <= {dataB[23:0], datainput_i[3:0]}; 
+				 end
+		end
+endmodule							
