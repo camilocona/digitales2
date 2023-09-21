@@ -38,12 +38,15 @@ module top (
   output logic [6:0] disp3, disp2, disp1, disp0
 );
   // Internal signals
+  logic loaddata, inputdata_ready;
   logic reset, enter;
   assign reset = ~nreset;
   assign enter = ~nenter;
+  	// Internal signals 
+	
 
   // Module instantiation: control unit
-  controlunit cu0 (clk, reset, loaddata, inputdata_ready);
+  controlunit contr0 (clk, reset, loaddata, inputdata_ready);
 
   // Module instantiation: datapath unit
   datapathunit dp0 (clk, reset, enter, inputdata, loaddata, inputdata_ready, disp3, disp2, disp1, disp0);
