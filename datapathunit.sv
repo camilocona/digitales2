@@ -17,7 +17,7 @@ module datapathunit (clk, reset, enter, inputdata,
 	
 	// Internal signals and module instantiation for peripherals unit
 	peripherals perip0 (clk, reset, enter, inputdata, loaddata, inputdata_ready, dataA, dataB, dataR, disp3, disp2, disp1, disp0);
-
+endmodule
 
 // *************************** 
 // Testbench for Datapath Unit
@@ -67,4 +67,3 @@ module tb_datapathunit ();
 
 endmodule
 
-  
