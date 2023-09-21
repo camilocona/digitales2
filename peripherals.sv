@@ -10,7 +10,7 @@ module peripherals (clk, reset, enter, inputdata,
 	input logic  loaddata;
 	output logic inputdata_ready;
 	output logic [31:0] dataA, dataB;
-	input logic  [31:0] dataR;
+	output logic  [31:0] dataR;
 	output logic [6:0] disp3, disp2, disp1, disp0;
 	
 	// Internal signals and module instantiation for pulse generation
@@ -65,7 +65,7 @@ module peripherals (clk, reset, enter, inputdata,
         if (byte_index == 4'b0100) begin
           // Si llegamos al último byte, cambiar de registro
           byte_index <= 4'b0000;
-          data_index <= data_index + 1; end
+          data_index <= data_index + 1; 
           if (data_index == 2'b11) begin
             // Si llegamos a R, indicar que los datos están listos (default)
             inputdata_ready <= 1'b1;
