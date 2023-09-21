@@ -27,7 +27,7 @@ module controlunit (clk, reset, loaddata, inputdata_ready);
 				s0:
 				//DUDA
 					if(inputdata_ready==0) begin
-						loaddata==1;
+						loaddata=1;
 						nextState=s1;
 					end
 					else
