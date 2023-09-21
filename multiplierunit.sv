@@ -6,17 +6,18 @@ module multiplierunit (dataA, dataB, dataR);
 	output logic [31:0] dataR;
 
 	// Internal signals to perform the multiplication
-	logic [22:0] mantisa_A, mantisa_B, mantisa_R;
+	logic [23:0] mantisa_A, mantisa_B;
+	logic [22:0] mantisa_R;
 	logic [7:0] exp_A, exp_B, exp_R;
 	logic sig_A, sig_B, sig_R;
 	logic [47:0] product; // Cambiado de 47 a 46 bits
-   logic [46:0] shifted_product; //desplazamiento del producto para la mantisa
+   logic [22:0] shifted_product; //mantisa R desplazamiento del producto para la mantisa
 	logic caso_a, caso_b, caso_c, caso_d;
 			
 	// Separar los componentes de los operandos IEEE 754
     assign mantisa_A = {1'b1,dataA[22:0]};
     assign mantisa_B = {1'b1,dataB[22:0]};
-    assign exp_A = dataA[30:23]; //DUDA +127
+    assign exp_A = dataA[30:23];
     assign exp_B = dataB[30:23];
     assign sig_A = dataA[31];
     assign sig_B = dataB[31];		
@@ -34,16 +35,17 @@ module multiplierunit (dataA, dataB, dataR);
 			
 	// Process: mantissa multiplier	
 		product = (mantisa_A * mantisa_B);
-		shifted_product = product[47:24]; 
+		//shifted_product = product[47:24];  //mantisa R
 		
-		if (shifted_product[23]) begin
-			shifted_product = shifted_product << 1;
+		if (product[47]) begin
+			shifted_product = product[46:24];
 			exp_R = exp_R +1;
 		end 
 		else begin
-		shifted_product = shifted_product <<2;
+		shifted_product = product [45:23];
 		end
-		dataR=shifted_product[22:0];
+		
+		dataR ={sig_R, exp_R, shifted_product};
 //	//CASOS ESPECIALES	
 //	
 //	caso_a=(dataA ==32'h00000000 || dataB == 32'h00000000);
@@ -83,8 +85,8 @@ module tb_multiplierunit();
     clk = 0;
 
   // Inicializar las entradas
-    dataA = 32'h41480000; // 12.5 en IEEE 754 (32 bits)
-    dataB = 32'hC0A66666; // -30.2 en IEEE 754 (32 bits)
+    dataA = 32'hA2C1CE20; // 12.5 en IEEE 754 (32 bits)
+    dataB = 32'hA1BE867D; // -5.2 en IEEE 754 (32 bits)
 	
 
     // Esperar un poco antes de mostrar el resultado
