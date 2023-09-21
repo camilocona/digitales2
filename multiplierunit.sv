@@ -30,7 +30,7 @@ module multiplierunit (dataA, dataB, dataR);
 			exp_R= exp_R - 127;
 		 else
 			exp_R=exp_R;
-	end
+	
 	
 	// Process: mantissa multiplier
 		product = (mantisa_A * mantisa_B);
@@ -41,12 +41,12 @@ module multiplierunit (dataA, dataB, dataR);
 		exp_R = exp_R +1;
 	end 
 	else begin
-		shifted_product = shifted_product <<2;
+	shifted_product = shifted_product <<2;
 	//CASOS ESPECIALES	
 	caso_a=(dataA ==32'h00000000 | dataB == 32'h00000000);
 	caso_b=(dataA== 32'h7F800000 | dataA == 32'hFF800000 | dataB == 32'h7F800000 | dataB == 32'hFF800000 );
 	caso_c=(dataA ==32'h7FC00000 | dataB == 32'h7FC00000);
-	caso_d=((dataA >= 32'h7F800000 && dataA <= 32'hFFFFFFFF) | dataB >= 32'h7F800000 && dataB <= 32'hFFFFFFFF );
+	caso_d=((dataA >= 32'h7F800000 && dataA <= 32'hFFFFFFFF) | dataB >= 32'h7F800000 && dataB <= 32'hFFFFFFFF );end
 	//ASIGNAR RESULTADOS PARA CASOS ESPECIALES
 	if (caso_a) begin
 		dataR = 32'h00000000; // Más o menos cero
@@ -57,7 +57,7 @@ module multiplierunit (dataA, dataB, dataR);
 	end else if (caso_d) begin
 		dataR = 32'h7FC00000; //NaN
 	end 
-
+	end
 endmodule
 
 // ***************************** 
@@ -71,11 +71,7 @@ module tb_multiplierunit();
   logic clk, rst;
 
   // Instanciar el módulo bajo prueba
-  multiplierunit uut (
-    .dataA(dataA),
-    .dataB(dataB),
-    .dataR(dataR)
-  );
+  multiplierunit multi(dataA, dataB, dataR);
 
   // Generar un clock
   initial begin
@@ -102,4 +98,4 @@ module tb_multiplierunit();
     $display("dataA = %h, dataB = %h, dataR = %h", dataA, dataB, dataR);
   end
 
-endmodule		
+endmodule	
