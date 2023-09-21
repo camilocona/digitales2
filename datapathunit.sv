@@ -12,7 +12,7 @@ module datapathunit (clk, reset, enter, inputdata,
 
 	// Internal signals and module instantiation for multiplier unit
 	logic [31:0] dataA, dataB, dataR;
-	multiplierunit  mult0 (dataA, dataB, dataR);
+	multiplierunit  mult2 (dataA, dataB, dataR);
 	
 	
 	// Internal signals and module instantiation for peripherals unit
@@ -66,4 +66,3 @@ module tb_datapathunit ();
   // WRITE HERE YOUR TESTBENCH CODE
 
 endmodule
-
