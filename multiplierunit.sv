@@ -94,4 +94,4 @@ module tb_multiplierunit();
 	 $stop;
   end
 
-endmodule	
+endmodule
