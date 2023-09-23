@@ -54,4 +54,5 @@ module peripheral_getoperands (clk, reset, inputdata, enterpulse, datainput_i, d
 				 dataB <= {dataB[23:0], datainput_i[3:0]}; 
 				 end
 		end
-endmodule							
+endmodule
+						
