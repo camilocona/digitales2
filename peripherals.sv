@@ -16,7 +16,7 @@ module peripherals (clk, reset, enter, inputdata,
 	// Internal signals and module instantiation for pulse generation
 	
 	//peripheral_pulse(enter, clk, reset, pulse);
-	peripheral_getoperands (clk, reset, inputdata, enterpulse, datainput_i, dataA, dataB);
+	peripheral_getoperands perget(clk, reset, inputdata, enterpulse, datainput_i, dataA, dataB);
 	
 	// Process, internal signals and assign statement to control data input / output indexes and data input ready signals
 	// Data Input/Output Control
@@ -30,7 +30,7 @@ module peripherals (clk, reset, enter, inputdata,
       data_index <= 2'b00; // Inicialmente seleccionar A
       byte_index <= 4'b0000; // Inicialmente seleccionar el byte 0
     end else begin
-      if (loaddata) begin
+      if (enter && loaddata) begin
         // Si loaddata está activado, cargar datos en el registro temporal
         case (byte_index)
           4'b0000: data_register[7:0] <= inputdata;
@@ -41,7 +41,7 @@ module peripherals (clk, reset, enter, inputdata,
         endcase
       end
 	// Controlar la selección de A, B o R y el byte dentro de ellos
-      if (loaddata && enterpulse) begin
+      if (enter && loaddata) begin //-> Aquí hay una duda
         // Solo actualizar si loaddata y enter están activados
         case (data_index)
 		  //Esto indica que se está asignando un rango de 8 bits consecutivos, comenzando desde el resultado de byte_index * 8.
@@ -81,3 +81,89 @@ module peripherals (clk, reset, enter, inputdata,
 
 
 endmodule
+
+module tb_peripherals();
+
+	logic clk, reset, enter;
+	logic [7:0] inputdata;
+	logic loaddata;
+	logic inputdata_ready;
+	logic [31:0] dataA, dataB;
+	logic [31:0] dataR;
+	logic [6:0] disp3, disp2, disp1, disp0;
+ 
+	peripherals perip0 (clk, reset, enter, inputdata, loaddata, inputdata_ready, dataA, dataB, dataR, disp3, disp2, disp1, disp0);
+	
+  // Generar un clock
+  initial begin
+    clk = 0;
+    forever #5 clk = ~clk;
+  end
+  
+  initial begin 
+  reset = 0;
+  enter = 0;
+  loaddata=1;
+  inputdata_ready=0;
+  inputdata = 8'h00; // 32'h3F800000
+  enter =1;
+  #10; //Para mantenerse durante un ciclo completo de reloj
+  enter=0;
+  #10;
+  inputdata = 8'h00; // 32'h3F800000
+  enter =1;
+  #10; //Para mantenerse durante un ciclo completo de reloj
+  enter=0;
+  #10;
+  inputdata = 8'h80; // 32'h3F800000
+  enter =1;
+  #10; //Para mantenerse durante un ciclo completo de reloj
+  enter=0;
+  #10;
+  inputdata = 8'h3F; // 32'h3F800000
+  enter =1;
+  #10; //Para mantenerse durante un ciclo completo de reloj
+  enter=0;
+  #10;
+  
+  //32'hA1BE867D   B
+  inputdata = 8'h7D; // 32'h3F800000
+  enter =1;
+  #10; //Para mantenerse durante un ciclo completo de reloj
+  enter=0;
+  #10;
+  inputdata = 8'h86; // 32'h3F800000
+  enter =1;
+  #10; //Para mantenerse durante un ciclo completo de reloj
+  enter=0;
+  #10;
+  inputdata = 8'hBE; // 32'h3F800000
+  enter =1;
+  #10; //Para mantenerse durante un ciclo completo de reloj
+  enter=0;
+  #10;
+  inputdata = 8'hA1; // 32'h3F800000
+  enter =1;
+  #10; //Para mantenerse durante un ciclo completo de reloj
+  enter=0;
+  #10;
+  inputdata_ready=1;
+  loaddata=0;
+  #10;
+  enter=1;
+  #10;
+  enter=0;
+  #10;
+  enter=1;
+  #10;
+  enter=0;
+  #10;
+  enter=1;
+  #10;
+  enter=0;
+  #10;
+  enter=1;
+  #40;
+	$stop;
+	end
+	endmodule
