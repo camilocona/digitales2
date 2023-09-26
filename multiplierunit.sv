@@ -85,9 +85,9 @@ module tb_multiplierunit();
     clk = 0;
 
   // Inicializar las entradas
-    dataA = 32'hA2C1CE20; // 12.5 en IEEE 754 (32 bits)
-    dataB = 32'hA1BE867D; // -5.2 en IEEE 754 (32 bits)
-	
+    dataA = 32'h41480000; // 12.5 en IEEE 754 (32 bits)
+    dataB = 32'hC0A66666; // -5.2 en IEEE 754 (32 bits)
+	//C2820000
 
     // Esperar un poco antes de mostrar el resultado
     #100 
