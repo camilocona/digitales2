@@ -28,19 +28,19 @@ module controlunit (clk, reset, loaddata, inputdata_ready);
 				//DUDA
 					if(inputdata_ready==0) begin
 						loaddata=1;
-						nextState=s1;
+						nextState=s0;
 					end
 					else begin
-						nextState= s0;
+						nextState= s1;
 						loaddata=0; end
 				s1:
 				//DUDA
 					if(inputdata_ready==1) begin
 						loaddata=0;
-						nextState=s0;
+						nextState=s1;
 					end
 					else begin
-						nextState= s1;
+						nextState= s0;
 						loaddata=1; end
 					
 				default:		
