@@ -1,6 +1,6 @@
-// ******************** 
+// ********************* 
 // Datapath Unit Module
-// ******************** 
+// ********************* 
 module datapathunit (clk, reset, enter, inputdata,
 						   loaddata, inputdata_ready,
 						   disp3, disp2, disp1, disp0);
