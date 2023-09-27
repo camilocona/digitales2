@@ -1,7 +1,7 @@
 // ******************* 
 // Get Operands Module
 // ******************* 
-module peripheral_getoperands (clk, reset, inputdata, enterpulse, loaddata,inputdata_ready, datainput_i, dataA, dataB, dataR,dataoutput);
+module peripheral_getoperands (clk, reset, inputdata, enterpulse, loaddata,inputdata_ready, datainput_i, dataA, dataB, dataR,dataoutput,pos1);
 	input logic clk, reset;
 	input logic [7:0] inputdata; //switch para A y B
 	input logic enterpulse, loaddata; //pulso
@@ -11,12 +11,17 @@ module peripheral_getoperands (clk, reset, inputdata, enterpulse, loaddata,input
 	output logic [31:0] dataA, dataB; //A y B
 	input logic  [31:0] dataR;
 	output logic [7:0] dataoutput;
+	output logic [3:0] pos1;
+	
+	
 
 	// Internal signals
 	logic intPulse;
 	logic [3:0] cnt;
 	logic [3:0] pos;
 	logic [0:3][7:0] dataoutput_i;   
+	
+	assign pos1={2'b00,pos[1:0]};
 	
 	assign inputdata_ready = pos[3]; 
 	// Parallel circuits
