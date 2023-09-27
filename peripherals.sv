@@ -15,14 +15,35 @@ module peripherals (clk, reset, enter, inputdata,
 	
 	// Internal signals and module instantiation for pulse generation
 	logic [7:0] dataoutput;
+	logic [3:0]pos1;
 	//peripheral_pulse(enter, clk, reset, pulse);
-	peripheral_getoperands perget(clk, reset, inputdata, enter, loaddata,inputdata_ready, datainput_i, dataA, dataB, dataR,dataoutput);
+	peripheral_getoperands perget(clk, reset, inputdata, enter, loaddata,inputdata_ready, datainput_i, dataA, dataB, dataR,dataoutput,pos1);
+logic [3:0] letra;
+ logic [1:0] var1;
+	
+	peripheral_deco7seg d0 (dataoutput[3:0],0,disp0);	//Menos significativos
+	peripheral_deco7seg d1 (dataoutput[7:4],0,disp1);	//
+	peripheral_deco7seg d2 (pos1,0,disp2);
+	
+always_comb begin
+ var1= pos1[3:2];
+ if (var1 == 2'b00 )
+    letra = 4'b1010;
+ else if (var1 ==2'b01)
+ letra = 4'b1011;
+ else if (var1 == 2'b10)
+  letra = 4'b1100;
+ else
+ letra = 4'b0000; // Añade una asignación predeterminada en caso de que ninguna de las condiciones se cumpla
+end
+
+peripheral_deco7seg d4 (letra, 1, disp3);
 	
 	// Process, internal signals and assign statement to control data input / output indexes and data input ready signals
 	// Data Input/Output Control
-  logic [1:0] data_index; // Control para seleccionar A (00), B (01) o R (10)
-  logic [3:0] byte_index; // Control para seleccionar el byte dentro de A, B o R
-  logic [31:0] data_register; // Registro temporal para cargar datos
+//  logic [1:0] data_index; // Control para seleccionar A (00), B (01) o R (10)
+//  logic [3:0] byte_index; // Control para seleccionar el byte dentro de A, B o R
+//  logic [31:0] data_register; // Registro temporal para cargar datos
 
 
   // Process to control data input/output indexes and data input ready signals
@@ -93,21 +114,19 @@ module tb_peripherals();
 	logic [6:0] disp3, disp2, disp1, disp0;
  
 	peripherals perip0 (clk, reset, enter, inputdata, loaddata, inputdata_ready, dataA, dataB, dataR, disp3, disp2, disp1, disp0);
+//	
+
 	
-	peripheral_deco7seg d1 (dataoutput_i[3:0],0,SEG);	//Menos significativos
-	peripheral_deco7seg d2 (dataoutput_i[7:4],0,SEG);	//
-	peripheral_deco7seg d3 (pos[1:0],0,SEG);
-	
-	if (pos[3:2]=='00')
-		peripheral_deco7seg d4 (,1,SEG);
-	
-	//00 a
-	//01 b
-	//10 r
-	peripheral_deco7seg d4 ();	
+//	if (pos[3:2]=='00')
+//		peripheral_deco7seg d4 (,1,SEG);
+//	
+//	//00 a
+//	//01 b
+//	//10 r
+//	peripheral_deco7seg d4 ();	
 	
   // Generar un clock
-//  initial begin
+  initial begin
     clk = 0;
     forever #5 clk = ~clk;
   end
@@ -185,4 +204,3 @@ module tb_peripherals();
 	$stop;
 	end
 	endmodule
-
