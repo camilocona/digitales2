@@ -94,8 +94,20 @@ module tb_peripherals();
  
 	peripherals perip0 (clk, reset, enter, inputdata, loaddata, inputdata_ready, dataA, dataB, dataR, disp3, disp2, disp1, disp0);
 	
+	peripheral_deco7seg d1 (dataoutput_i[3:0],0,SEG);	//Menos significativos
+	peripheral_deco7seg d2 (dataoutput_i[7:4],0,SEG);	//
+	peripheral_deco7seg d3 (pos[1:0],0,SEG);
+	
+	if (pos[3:2]=='00')
+		peripheral_deco7seg d4 (,1,SEG);
+	
+	//00 a
+	//01 b
+	//10 r
+	peripheral_deco7seg d4 ();	
+	
   // Generar un clock
-  initial begin
+//  initial begin
     clk = 0;
     forever #5 clk = ~clk;
   end
