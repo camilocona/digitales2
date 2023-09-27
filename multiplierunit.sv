@@ -46,30 +46,30 @@ module multiplierunit (dataA, dataB, dataR);
 		end
 		
 		dataR ={sig_R, exp_R, shifted_product};
-//	//CASOS ESPECIALES	
-//	
-	caso_a=(dataA ==32'h00000000 || dataB == 32'h00000000);
-	caso_b=(dataA== 32'h7F800000 || dataA == 32'hFF800000 || dataB == 32'h7F800000 || dataB == 32'hFF800000 );
-	caso_c=(dataA ==32'h7FC00000 || dataB == 32'h7FC00000);
-	caso_d=((exp_A == 8'h11111111 && dataA[22:0] != 0) || exp_B == 8'h11111111 && dataB[22:0] != 0 );
-//	//ASIGNAR RESULTADOS PARA CASOS ESPECIALES
-//	
-	if (caso_a) begin
-		dataR = 32'h7FC00000;	// Más o menos cero	end
-		if (caso_b) begin
-		dataR = 32'h7FC00000;
-	end else if (caso_c) begin
-		dataR = 32'h00000000;
-		end else begin
-			dataR= 32'h00000000;
-		end
-		end else if (caso_b) begin
-		dataR = caso_c ? 32'h00000000 : (sig_A ^ sig_B) ? 32'h7F800000;
-	end else if (caso_c) begin
-		dataR = 32'h7FC00000; //NaN
-	end else if (caso_d) begin
-		dataR = 32'h7FC00000; //NaN
-end 
+////	//CASOS ESPECIALES	
+////	
+//	caso_a=(dataA ==32'h00000000 || dataB == 32'h00000000);
+//	caso_b=(dataA== 32'h7F800000 || dataA == 32'hFF800000 || dataB == 32'h7F800000 || dataB == 32'hFF800000 );
+//	caso_c=(dataA ==32'h7FC00000 || dataB == 32'h7FC00000);
+//	caso_d=((exp_A == 8'h11111111 && dataA[22:0] != 0) || exp_B == 8'h11111111 && dataB[22:0] != 0 );
+////	//ASIGNAR RESULTADOS PARA CASOS ESPECIALES
+////	
+//	if (caso_a) begin
+//		dataR = 32'h7FC00000;	// Más o menos cero	end
+//		if (caso_b) begin
+//		dataR = 32'h7FC00000;
+//	end else if (caso_c) begin
+//		dataR = 32'h00000000;
+//		end else begin
+//			dataR= 32'h00000000;
+//		end
+//		end else if (caso_b) begin
+//		dataR = caso_c ? 32'h00000000 : (sig_A ^ sig_B) ? 32'h7F800000;
+//	end else if (caso_c) begin
+//		dataR = 32'h7FC00000; //NaN
+//	end else if (caso_d) begin
+//		dataR = 32'h7FC00000; //NaN
+//end 
 
 end
 endmodule
