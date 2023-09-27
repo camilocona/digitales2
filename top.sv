@@ -1,6 +1,6 @@
-// ***********
+// **********
 // Top Module
-// *********** 
+// ********** 
 module top (
   input logic clk, nreset, nenter,
   input logic [7:0] inputdata,
