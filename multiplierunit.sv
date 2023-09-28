@@ -35,10 +35,24 @@ module multiplierunit (dataA, dataB, dataR);
 
 		if (dataA == 32'h00000000 && dataB == 32'h7F800000) begin
 			dataR= 32'hFFFFFFFF; end
+			
 		else if (dataA == 32'h00000000 && dataB == 32'hFFFFFFFF) begin
 			dataR= 32'hFFFFFFFF; end
+			
 		else if (dataB == 32'h7F800000 | dataB == 32'hFF800000) begin
 			dataR= 32'h7F800000; end
+			
+		else if (dataB == 32'hFFFFFFFF | dataB == 32'hFFFFFFFF) begin
+			dataR= 32'hFFFFFFFF; end
+			
+		else if (dataA == 32'h7F800000 && dataB == 32'hFF800000) begin
+			dataR= 32'h7F800000; end
+			
+		else if (dataA == 32'h7F800000 && dataB == 32'hFFFFFFFF) begin
+			dataR= 32'hFFFFFFFF; end
+			
+		else if (dataA == 32'hFFFFFFFF && dataB == 32'hFFFFFFFF) begin
+			dataR= 32'hFFFFFFFF; end
 		
 		
 		
