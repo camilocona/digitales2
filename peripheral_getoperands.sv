@@ -21,7 +21,7 @@ module peripheral_getoperands (clk, reset, inputdata, enterpulse, loaddata,input
 	logic [3:0] pos;
 	logic [0:3][7:0] dataoutput_i;   
 	
-	assign pos1={2'b00,pos[1:0]};
+	assign pos1=pos;
 	
 	assign inputdata_ready = pos[3]; 
 	// Parallel circuits
