@@ -51,16 +51,13 @@ module peripheral_getoperands (clk, reset, inputdata, enterpulse, loaddata,input
 	
 	always @(posedge clk, posedge reset) begin
         if (reset) begin
-
             datainput_i[0] <= 8'b0;//A menos significativas
             datainput_i[1] <= 8'b0;
             datainput_i[2] <= 8'b0;
             datainput_i[3] <= 8'b0;//A mas significativas
-				
 				end
 			else begin
-				 if(enterpulse && loaddata) begin
-				 
+				 if(loaddata) begin
 				 datainput_i[pos][7:0]=inputdata;
 				 dataoutput = inputdata;
 				 end
