@@ -26,18 +26,18 @@ logic [3:0] letra;
 	peripheral_deco7seg d2 (pos1,0,disp2);
 	
 always_comb begin
- var1= pos1[3:2];
- if (var1 == 2'b00 )
-    letra = 4'b1010;
- else if (var1 ==2'b01)
- letra = 4'b1011;
- else if (var1 == 2'b10)
-  letra = 4'b1100;
+ //var1= pos1[3:2];
+ if (pos1[3:2] == 2'b00 )begin
+    letra = 4'b1010;end
+ else if (pos1[3:2] ==2'b01)begin
+		letra = 4'b1011;end
+ else if (pos1[3:2] == 2'b10)begin
+		letra = 4'b1100;end
  else
- letra = 4'b0000; // Añade una asignación predeterminada en caso de que ninguna de las condiciones se cumpla
+ letra = 4'b1010; // Añade una asignación predeterminada en caso de que ninguna de las condiciones se cumpla
 end
 
-peripheral_deco7seg d4 (letra, 1, disp3);
+peripheral_deco7seg d3 (letra, 1, disp3);
 	
 	// Process, internal signals and assign statement to control data input / output indexes and data input ready signals
 	// Data Input/Output Control
@@ -127,12 +127,12 @@ module tb_peripherals();
 	
   // Generar un clock
   initial begin
-    clk = 0;
+   
     forever #5 clk = ~clk;
   end
   
   initial begin 
- 
+  clk = 0;
   reset = 0;
   enter = 0;
   loaddata=1;
