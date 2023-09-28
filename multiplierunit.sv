@@ -48,28 +48,32 @@ module multiplierunit (dataA, dataB, dataR);
 		dataR ={sig_R, exp_R, shifted_product};
 ////	//CASOS ESPECIALES	
 ////	
-//	caso_a=(dataA ==32'h00000000 || dataB == 32'h00000000);
-//	caso_b=(dataA== 32'h7F800000 || dataA == 32'hFF800000 || dataB == 32'h7F800000 || dataB == 32'hFF800000 );
-//	caso_c=(dataA ==32'h7FC00000 || dataB == 32'h7FC00000);
-//	caso_d=((exp_A == 8'h11111111 && dataA[22:0] != 0) || exp_B == 8'h11111111 && dataB[22:0] != 0 );
-////	//ASIGNAR RESULTADOS PARA CASOS ESPECIALES
-////	
-//	if (caso_a) begin
-//		dataR = 32'h7FC00000;	// Más o menos cero	end
-//		if (caso_b) begin
-//		dataR = 32'h7FC00000;
-//	end else if (caso_c) begin
-//		dataR = 32'h00000000;
-//		end else begin
-//			dataR= 32'h00000000;
-//		end
-//		end else if (caso_b) begin
-//		dataR = caso_c ? 32'h00000000 : (sig_A ^ sig_B) ? 32'h7F800000;
-//	end else if (caso_c) begin
-//		dataR = 32'h7FC00000; //NaN
-//	end else if (caso_d) begin
-//		dataR = 32'h7FC00000; //NaN
-//end 
+    caso_a = (dataA == 32'h00000000 || dataB == 32'h00000000); // +/- 0
+    caso_b = (dataA == 32'h7F800000 || dataA == 32'hFF800000 || dataB == 32'h7F800000 || dataB == 32'hFF800000); //+/- Inf
+    caso_c = (dataA == 32'h7FC00000 || dataB == 32'h7FC00000); //NaN
+caso_d = ((exp_A == 8'b11111111 && dataA[22:0] != 0) || (exp_B == 8'b11111111 && dataB[22:0] != 0)); //NaN casos
+
+    // Asignar resultados para casos especiales
+
+    if (caso_a) begin
+if(caso_b) begin
+dataR = 32'h7FC00000;
+end else if(caso_c) begin
+dataR = 32'h7FC00000;
+end else begin
+dataR = 32'h00000000; // ±0
+end
+
+    end else if (caso_b) begin
+dataR = caso_c ? 32'h7FC00000 : (sig_A ^ sig_B) ? 32'hFF800000 : 32'h7F800000; // ±Inf o NaN
+
+    end else if (caso_c) begin
+dataR = 32'h7FC00000; // NaN
+
+    end else if (caso_d) begin
+dataR = 32'h7FC00000; // NaN
+
+    end
 
 end
 endmodule
@@ -93,9 +97,11 @@ module tb_multiplierunit();
     clk = 0;
 
   // Inicializar las entradas
-    dataA = 32'h41480000; // 12.5 en IEEE 754 (32 bits)
-    dataB = 32'hC0A66666; // -5.2 en IEEE 754 (32 bits)
+   // dataA = 32'h41480000; // 12.5 en IEEE 754 (32 bits)
+   // dataB = 32'hC0A66666; // -5.2 en IEEE 754 (32 bits)
 	//C2820000
+	dataA = 32'h00000000;
+	dataB= 32'hFFFFFFFF;
 
     // Esperar un poco antes de mostrar el resultado
     #100 
