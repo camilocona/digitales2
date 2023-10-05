@@ -39,8 +39,8 @@ _if2_:
 	LDR R4,[R1,R8] //R4=datos[pos1+1]  pos siguiente
 	CMP R10, R4  //Compara R10 Y R4 (5 y 3)
 	BGE _DESCENDENTE_ //Se va a _DESCENDENTE_ cuando se cumpla la condicion de R10>=R4, sino continua
-	STR R4, [R1,R0] //se cambia el orden R4=datos[pos1] pos actual
-	STR R10, [R1,R8] //se cambia el orden R10=datos[pos1+1] pos siguiente
+	STR R4, [R1,R0] //se cambia el orden R4=datos[pos1] pos actual   	R10 ahora es R4
+	STR R10, [R1,R8] //se cambia el orden R10=datos[pos1+1] pos siguiente     R4 ahora es R10
 	B _CONTADORES2_
 	
 _DESCENDENTE_: 
@@ -60,7 +60,7 @@ FIN_Y_MULTIPLOS:
 	MOV R5, #0
 	MOV R10, #0
 	ADD R2, R2, #1
-	LDR R5, =mult
+	LDR R5, =SortedData
 	B _MULTI_
 	
 _MULTI_: //MULTIPLOS DE 4
@@ -122,12 +122,12 @@ FIN_Y_MULTIPLOS1: //Multiplos de 2
 	MOV R5, #0
 	MOV R10, #0
 	ADD R2, R2, #1
-	LDR R5, =mult //Lista vacía para llenarla con los múltiplos de 2
+	LDR R5, =SortedData //Lista para llenarla con los múltiplos de 2
 	B _MULTI1_
 
 _ASCENDENTE_: //Organiza lista
-	STR R4, [R1,R0] 
-	STR R10, [R1,R8] 
+	STR R4, [R1,R0] //cambia la posicion antes era R10
+	STR R10, [R1,R8] //cambia la posicion antes era R4
 	B _CONTADORES_
 
 	
@@ -157,10 +157,9 @@ Final:
 
 .data
 N: .dc.l 10
-datos: .dc.l -4,-12,1,6,136,1571,0,56,1,-977
-mult: .dc.l 0
-OP: .dc.l 2
+datos: .dc.l -4,-12,2,6,136,1571,0,56,4,-977
+OP: .dc.l 1
 // OP: 1 - Descendente y múltiplos de 4
 // OP: 2 - Ascendente y múltiplos de 2
 
-SortedData: .ds.l MAXN
+SortedData: .ds.l MAXN	
