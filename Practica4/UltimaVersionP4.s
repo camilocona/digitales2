@@ -1,13 +1,13 @@
 .global _start
-	.equ MAXN, 200
+.equ MAXN, 200
 
 .text
 _start:
 
-MOV R2, #0
-MOV R3, #0
+MOV R2, #0 //Para el while exterior (i) se pone en 0
+MOV R3, #0 //Se pone en 0 para evitar numeros arbitrarios
 
-LDR R1, =datos
+LDR R1, =datos //
 LDR R4, =N //Carga en R4 la dirección de memoria donde se encuentra la variable N.
 LDR R5, [R4] //Carga el valor almacenado en la dirección apuntada por R4 (es decir, el valor de N) en el registro R5.
 
@@ -18,31 +18,31 @@ LDR R6, [R6] //Carga el valor almacenado en la dirección apuntada por R6 (es de
 MOV R7, #0
 
 CMP R6, #2
-BGE _WHILE1ASCENDENTE_
+BGE _WHILE1ASCENDENTE_ //Se va a _WHILE1ASCENDENTE_ cuando se cumpla la condicion de R6>=2, sino continua
 
 _WHILE1DESCENDENTE_:
 	MOV R0, #0 //Posiciones de memoria
 	MOV R8, #4 
 	
-	MOV R9, #0 //j while interior
+	MOV R9, #0 //Para el while exterior (j) se pone en 0
 	
 	CMP R2, R5
 
-	BGE FIN_Y_MULTIPLOS //Comparador para saber si termino con todo el proceso y manda a organizador de multiplos
+	BGE FIN_Y_MULTIPLOS //Se va a FIN_Y_MULTIPLOS cuando se cumpla la condicion de R2>=R5, sino continua
 	
 	ADD R2, R2, #1
 	b _WHILE2DESCENDENTE_
 	
 _WHILE2DESCENDENTE_:
 	CMP R9,R5	//Genero loop hasta valor N-1 (5 en este caso)
-	BGE _WHILE1DESCENDENTE_
+	BGE _WHILE1DESCENDENTE_ //Se va a _WHILE1DESCENDENTE_ cuando se cumpla la condicion de R9>=R5, sino continua
 	b _if2_
 
 _if2_:			
 	LDR R10,[R1,R0]
 	LDR R4,[R1,R8]
 	CMP R10, R4
-	BGE _DESCENDENTE_
+	BGE _DESCENDENTE_ //Se va a _DESCENDENTE_ cuando se cumpla la condicion de R10>=R4, sino continua
 	
 	STR R4, [R1,R0]
 	STR R10, [R1,R8]
@@ -56,8 +56,8 @@ _DESCENDENTE_:
 _CONTADORES2_:
 
 	ADD R9, R9, #1 //Para el loop interno
-	ADD	R0, R0, #4 //Para recorrer la memory
-	ADD R8, R8, #4 //Para recorrer la memory en una posicion mas
+	ADD	R0, R0, #4 //Para recorrer la memoria
+	ADD R8, R8, #4 //Para recorrer la memoria en una posicion mas
 	b _WHILE2DESCENDENTE_
 	
 FIN_Y_MULTIPLOS:
@@ -71,13 +71,13 @@ FIN_Y_MULTIPLOS:
 _MULTI_: //MULTIPLOS DE 4
 	MOV R9, #0x03
 	CMP R3,R2
-	BGE fin
+	BGE fin  //Se va a fin cuando se cumpla la condicion de R3>=R2, sino continua
 	
 	LDR R4, [R1,R7]
 	AND R0, R4, R9
 	
 	CMP R0, #0
-	BEQ MULTIPLO_DE_4
+	BEQ MULTIPLO_DE_4  //Se va a MULTIPLO_DE_4 cuando se cumpla la condicion de R0=0, sino continua
 	
 	
 	
@@ -109,14 +109,14 @@ _WHILE1ASCENDENTE_:
 
 _WHILE2ASCENDENTE_:
 	CMP R9,R5	//Genero loop hasta valor N-1 (5 en este caso)
-	BGE _WHILE1ASCENDENTE_
+	BGE _WHILE1ASCENDENTE_   //Se va a _WHILE1ASCENDENTE_ cuando se cumpla la condicion de R9>=R5, sino continua
 	b _if1_
 
  _if1_:
 	LDR R10,[R1,R0]
 	LDR R4,[R1,R8]
 	CMP R10, R4
-	BGE _ASCENDENTE_
+	BGE _ASCENDENTE_ //Se va a _ASCENDENTE_ cuando se cumpla la condicion de R10>=R4, sino continua
 	
 	STR R10, [R1,R0] //PROBAR BORRAR
 	STR R4, [R1,R8] //PROBAR BORRAR
@@ -149,12 +149,12 @@ _ASCENDENTE_: //Organiza lista
 _MULTI1_: //MULTIPLOS DE 2
 	MOV R9, #0x01
 	CMP R3,R2
-	BGE fin
+	BGE fin //Se va a fin cuando se cumpla la condicion de R3>=R2, sino continua
 	
 	LDR R4, [R1,R7]
 	AND R0, R4, R9
 	CMP R0, #0
-	BEQ MULTIPLO_DE_2
+	BEQ MULTIPLO_DE_2 //Se va a MULTIPLO_DE_2 cuando se cumpla la condicion de R0=0, sino continua
 	ADD R7, R7, #4
 	ADD R3, R3, #1
 	B _MULTI1_
@@ -180,4 +180,3 @@ mult: .dc.l 0
 OP: .dc.l 2
 
 SortedData: .ds.l MAXN
-	
