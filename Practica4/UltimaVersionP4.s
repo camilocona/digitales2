@@ -11,7 +11,7 @@ LDR R1, =datos //Carga de la direccion del arreglo de datos
 LDR R4, =N //Carga en R4 la dirección de memoria donde se encuentra la variable N.
 LDR R5, [R4] //Carga el valor almacenado en la dirección apuntada por R4 (es decir, el valor de N) en el registro R5.
 
-SUB R5, R5, #1 //Resta 1 para cuadrar el tamaño del arreglo teniendo en cuenta la posicion 0
+SUB R5, R5, #1 //Resta 1 para recorrer la lista para el total de elementos -1 porque el último no tendría con cual compararlo
 LDR R6, =OP 
 LDR R6, [R6] //Carga el valor almacenado en la dirección apuntada R6 que es el valor de OP en el registro R6.
 MOV R7, #0 //se inicia en 0
@@ -170,6 +170,6 @@ Final:
 N: .dc.l 10
 datos: .dc.l -4,-12,1,6,136,1571,0,56,1,-977
 mult: .dc.l 0
-OP: .dc.l 1
+OP: .dc.l 2
 
 SortedData: .ds.l MAXN
