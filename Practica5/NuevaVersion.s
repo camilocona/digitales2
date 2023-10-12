@@ -1,8 +1,13 @@
-//
+.global _start
+.equ MAXN, 200
+
+.text
+_start:
+
 
 mergeSort:
 LDR R2, =Data //Lista de datos sin arreglar s
-LDR R3, =Data2 //Lista de salida arreglada c
+LDR R3, =SortedData //Lista de salida arreglada c
 
 
 If1:
@@ -83,3 +88,8 @@ ADD R11,R11,#4  //R++
 
 RETURN:
 MOV PC,LR
+
+.data
+N: .dc.l 10
+Data: .dc.l -4,-12,2,6,136,1571,0,56,4,-977
+SortedData: .ds.l MAXN	
