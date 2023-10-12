@@ -4,21 +4,6 @@
 .text
 _start:
 
-MOV R0,#0
-MOV R1,#0
-MOV R2,#0
-MOV R3,#0
-MOV R4,#0
-MOV R5,#0
-MOV R6,#0
-MOV R7,#0
-MOV R8,#0
-MOV R9,#0
-MOV R10,#0
-MOV R11,#0
-MOV R12,#0
-
-
 mergeSort:
 PUSH {LR} 
 
@@ -29,14 +14,15 @@ LDR R3, =SortedData //Lista de salida arreglada c
 If1:
 MOV R0, #0 // i
 LDR R1, =N
+LDR R1, [R1]
 SUB R1, #1//j=N-1
 POP {LR} //Creemos que es así
 BEQ RETURN  //Cuando i=j
 
 
 ADD R4,R0,R1 //M=i+j
-ASRS R12, R4, #1 //M=(i+j)/2
-MOV R4,R12
+ASR R12, R4, #1 //M=(i+j)/2
+MOV R4,R12 
 ADD R5,R4,#4 //M+1
 
 //LLAMAR MERGESORT   ------DUDA-------
@@ -122,3 +108,4 @@ MOV PC,LR
 N: .dc.l 10
 Data: .dc.l -4,-12,2,6,136,1571,0,56,4,-977
 SortedData: .ds.l MAXN	
+	
