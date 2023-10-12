@@ -4,39 +4,37 @@
 .text
 _start:
 
-mergeSort:
-PUSH {LR} 
 
 LDR R2, =Data //Lista de datos sin arreglar s
-LDR R3, =SortedData //Lista de salida arreglada c
-
-
-If1:
 MOV R0, #0 // i
 LDR R1, =N
 LDR R1, [R1]
 SUB R1, #1//j=N-1
-POP {LR} //Creemos que es así
-BEQ RETURN  //Cuando i=j
 
+mergeSort:  //(s,i,j)
+PUSH {LR,R2,R0,R1,R4} 
+LDR R3, =SortedData //Lista de salida arreglada c
+If1:
+BNE CONTINUE  //Cuando i!=j
+POP {LR,R2,R0,R1,R4}  //VOLVEMOS A CARGAR ANTES DEL RETORNAR
+MOV PC, LR
 
-ADD R4,R0,R1 //M=i+j
-ASR R12, R4, #1 //M=(i+j)/2
-MOV R4,R12 
-ADD R5,R4,#4 //M+1
+CONTINUE:
+ADD R4,R0,R1 //M=  i+j FALTA EL /2
+ASR R4, R4, #1 //M=(i+j)/2
+MOV R1,R4 //J<-M
 
-//LLAMAR MERGESORT   ------DUDA-------
-MOV R6, R4 //J=M NUEVA COPIA DE J
-PUSH {R0}
+//LLAMAR POR PRIMERA VEZ MERGESORT   ------DUDA-------
 BL mergeSort   //MergeSort(s,i,m) 
 
-POP {R0}
+ADD R5,R4,#4 //M+1
+MOV R0,R5 // I <- M+1
 
-MOV R7,R5 //I=M+1 NUEVA COPIA DE I
-
-PUSH {R1}
+ADD SP,SP,#16
 BL mergeSort   //MergeSort(s,m+1,j)
-POP {R1}
+
+ADD SP,SP,#16
+
 
 //DUDA DE COMO ENTRARLE I,J A FUSE
 BL fuse
@@ -108,4 +106,3 @@ MOV PC,LR
 N: .dc.l 10
 Data: .dc.l -4,-12,2,6,136,1571,0,56,4,-977
 SortedData: .ds.l MAXN	
-	
