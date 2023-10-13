@@ -15,13 +15,14 @@ mergeSort:  //(s,i,j)
 PUSH {LR,R2,R0,R1,R4} 
 LDR R3, =SortedData //Lista de salida arreglada c
 If1:
+CMP R0,R1
 BNE CONTINUE  //Cuando i!=j
 POP {LR,R2,R0,R1,R4}  //VOLVEMOS A CARGAR ANTES DEL RETORNAR
 MOV PC, LR
 
 CONTINUE:
 ADD R4,R0,R1 //M=  i+j FALTA EL /2
-ASR R4, R4, #1 //M=(i+j)/2
+ASR R4, R4, #1 //M=(i+j)/2   
 MOV R1,R4 //J<-M
 
 //LLAMAR POR PRIMERA VEZ MERGESORT   ------DUDA-------
@@ -50,9 +51,9 @@ ADD R8, R8,#4 //se recorre la lista K++
 LDR R2, [R8], #0 //SE GUARDA LA PRIMERA DE LA LISTA DE S
 LDR R3, [R8], #0 //SE GUARDA LA PRIMERA DE LA LISTA DE S EN C 
 
-
+//----------FUSE-------------
 fuse:
-PUSH {R2,R0,R1,R3}
+
 MOV R9, R0 //P <-I
 MOV R10,R5 //Q <- M+1
 MOV R11, R0 //R <- I
@@ -67,8 +68,8 @@ B IFW1
 ADD R11,R11,#4  //R++
 
 IFW1:
-MOV R6,#0 //SE REUTILIZA PARA Sp
-MOV R7,#0 //SE REUTILIZA PARA Sq
+MOV R6,#0 // Sp
+MOV R7,#0 // Sq
 MOV R8,#0 //SE REUTILIZA PARA Cr
 LDR R6,[R2,R9] //Sp
 LDR R7,[R2,R10] //Sq
