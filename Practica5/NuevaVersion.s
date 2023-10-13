@@ -24,17 +24,19 @@ CONTINUE:
 ADD R4,R0,R1 //M=  i+j FALTA EL /2
 ASR R4, R4, #1 //M=(i+j)/2   
 MOV R1,R4 //J<-M
-
+POP {R4}
 //LLAMAR POR PRIMERA VEZ MERGESORT   ------DUDA-------
 BL mergeSort   //MergeSort(s,i,m) 
 
-ADD R5,R4,#4 //M+1
+
+ADD R5,R4,#1 //M+1
 MOV R0,R5 // I <- M+1
 
-ADD SP,SP,#16
+ADD SP,SP,#24
+
 BL mergeSort   //MergeSort(s,m+1,j)
 
-ADD SP,SP,#16
+ADD SP,SP,#24
 
 
 //DUDA DE COMO ENTRARLE I,J A FUSE
