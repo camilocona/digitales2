@@ -11,8 +11,20 @@ LDR R1, =N
 LDR R1, [R1]
 SUB R1, #1//j=N-1
 
+//------------------------------------------------------------------------
 forC:
+MOV R8,#0 //K que recorre el fuse
 
+	MOV R8, R0  //K <- I
+	//LDR
+	CMP R8, R1
+	LDR R8,[R8]
+	
+	ADD R8, R8, #1 //se recorre la lista K++
+	LDR R2, [R8, LSL #2], #0 //SE GUARDA LA PRIMERA DE LA LISTA DE S
+	LDR R3, [R8, LSL #2], #0 //SE GUARDA LA PRIMERA DE LA LISTA DE S EN C
+	BLE for1
+//------------------------------------------------------------------------
 
 BL mergeSort
 B stop
@@ -61,9 +73,9 @@ for1:
 	CMP R8, R1
 	LDR R8,[R8]
 	
+	LDR R2, [R3, R8, LSL #2], #0 //SE GUARDA LA PRIMERA DE LA LISTA DE S    
+	STR R2, [R5, R8, LSL #2], #0 //SE GUARDA LA PRIMERA DE LA LISTA DE S EN C
 	ADD R8, R8, #1 //se recorre la lista K++
-	LDR R2, [R8, LSL #2], #0 //SE GUARDA LA PRIMERA DE LA LISTA DE S
-	LDR R3, [R8, LSL #2], #0 //SE GUARDA LA PRIMERA DE LA LISTA DE S EN C
 	BLE for1
 	
 	POP {LR}  //VOLVEMOS A CARGAR ANTES DEL RETORNAR
