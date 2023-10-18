@@ -11,31 +11,24 @@ LDR R1, =N
 LDR R1, [R1]
 SUB R1, #1//j=N-1
 //------------------------------DUDA CAMI-------------------
+
+PUSH {LR,R0}
 copy_data:
-    CMP R2, #0
-    BEQ end_copy
+    CMP R0, R1
+	BGE DONE
+	LDR R5, [R2, R0, LSL #2]	
+	STR R5, [R2, R0, LSL #2]	
+	ADD R0,R0, #1
+	B copy_data
+DONE:
+	POP {LR,R0}
+	MOV PC, LR
+	
 
-    LDRB R3, [R0], #1     // Carga un byte de Data y aumenta la dirección en R0
-    STRB R3, [R1], #1     // Almacena el byte en C y aumenta la dirección en R1
-    SUBS R2, R2, #1       // Decrementa el contador
-    B copy_data
 
-end_copy:
-    BX LR
 
 //------------------------------------------------------------------------
-for1:
-//MOV R8,#0 //K que recorre el fuse
 
-	MOV R8, R0  //K <- I
-	//LDR
-	CMP R8, R1
-	//LDR R8,[R8]
-	
-	ADD R8, R8, #1 //se recorre la lista K++
-	LDR R2, [R2,R8, LSL #2] //SE GUARDA LA PRIMERA DE LA LISTA DE S
-	LDR R3, [R3,R8, LSL #2] //SE GUARDA LA PRIMERA DE LA LISTA DE S EN C
-	BLE for1
 //------------------------------------------------------------------------
 
 BL mergeSort
@@ -83,8 +76,8 @@ for1:
 	CMP R8, R1
 	LDR R8,[R8]
 	
-	LDR R2, [R3, R8, LSL #2] //SE GUARDA LA PRIMERA DE LA LISTA DE S    
-	STR R2, [R5, R8, LSL #2] //SE GUARDA LA PRIMERA DE LA LISTA DE S EN C
+	LDR R12, [R3, R8, LSL #2] //SE GUARDA LA PRIMERA DE LA LISTA DE S    
+	STR R12, [R5, R8, LSL #2] //SE GUARDA LA PRIMERA DE LA LISTA DE S EN C
 	ADD R8, R8, #1 //se recorre la lista K++
 	BLE for1
 	
