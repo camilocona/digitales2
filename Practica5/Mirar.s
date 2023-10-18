@@ -11,6 +11,18 @@ LDR R1, =N
 LDR R1, [R1]
 SUB R1, #1//j=N-1
 
+copy_data:
+    CMP R2, #0
+    BEQ end_copy
+
+    LDRB R3, [R0], #1     // Carga un byte de Data y aumenta la dirección en R0
+    STRB R3, [R1], #1     // Almacena el byte en C y aumenta la dirección en R1
+    SUBS R2, R2, #1       // Decrementa el contador
+    B copy_data
+
+end_copy:
+    BX LR
+
 //------------------------------------------------------------------------
 forC:
 MOV R8,#0 //K que recorre el fuse
