@@ -10,7 +10,7 @@ MOV R0, #0 // i
 LDR R1, =N
 LDR R1, [R1]
 SUB R1, #1//j=N-1
-
+//------------------------------DUDA CAMI-------------------
 copy_data:
     CMP R2, #0
     BEQ end_copy
@@ -24,17 +24,17 @@ end_copy:
     BX LR
 
 //------------------------------------------------------------------------
-forC:
-MOV R8,#0 //K que recorre el fuse
+for1:
+//MOV R8,#0 //K que recorre el fuse
 
 	MOV R8, R0  //K <- I
 	//LDR
 	CMP R8, R1
-	LDR R8,[R8]
+	//LDR R8,[R8]
 	
 	ADD R8, R8, #1 //se recorre la lista K++
-	LDR R2, [R8, LSL #2], #0 //SE GUARDA LA PRIMERA DE LA LISTA DE S
-	LDR R3, [R8, LSL #2], #0 //SE GUARDA LA PRIMERA DE LA LISTA DE S EN C
+	LDR R2, [R2,R8, LSL #2] //SE GUARDA LA PRIMERA DE LA LISTA DE S
+	LDR R3, [R3,R8, LSL #2] //SE GUARDA LA PRIMERA DE LA LISTA DE S EN C
 	BLE for1
 //------------------------------------------------------------------------
 
@@ -55,27 +55,25 @@ CONTINUE:
 	ADD R4,R0,R1 //M=  i+j FALTA EL /2
 	LSR R4, R4, #1 //M=(i+j)/2   
 	//LLAMAR POR PRIMERA VEZ MERGESORT   ------DUDA-------
-	PUSH {R2,R0,R1,R4} 
+	PUSH {R0,R1,R2,R4} 
 	MOV R1,R4 //J<-M
 	BL mergeSort   //MergeSort(s,i,m) 
+	POP {R0,R1,R2,R4}
 	
-	POP {R2,R0,R1,R4}
-	
-	PUSH {R2,R0,R1,R4}
-	
+	//------------
+	PUSH {R0,R1,R2,R4}
 	ADD R4,R4,#1 //M = M+1
 	MOV R0,R4 // I <- M+1
-
 	BL mergeSort   //MergeSort(s,m+1,j)
-	POP {R2,R0,R1,R4}
+	POP {R0,R1,R2,R4}
 	
 
 
 	
 //DUDA DE COMO ENTRARLE I,J A FUSE
-	PUSH {R3,R0,R1}  //ENTRADA FUSE(C,I,J)
+	PUSH {R0,R1,R3}  //ENTRADA FUSE(C,I,J)
 	BL fuse
-	POP {R3,R0,R1}
+	POP {R0,R1,R3}
 
 for1:
 	MOV R8,#0 //K que recorre el fuse
@@ -85,8 +83,8 @@ for1:
 	CMP R8, R1
 	LDR R8,[R8]
 	
-	LDR R2, [R3, R8, LSL #2], #0 //SE GUARDA LA PRIMERA DE LA LISTA DE S    
-	STR R2, [R5, R8, LSL #2], #0 //SE GUARDA LA PRIMERA DE LA LISTA DE S EN C
+	LDR R2, [R3, R8, LSL #2] //SE GUARDA LA PRIMERA DE LA LISTA DE S    
+	STR R2, [R5, R8, LSL #2] //SE GUARDA LA PRIMERA DE LA LISTA DE S EN C
 	ADD R8, R8, #1 //se recorre la lista K++
 	BLE for1
 	
