@@ -18,15 +18,19 @@ LDR R3, =Data2 //Lista de salida arreglada c
 BL mergeSort
 B stop
 //-------------------------------------------------
-
+	
 copy_data: 
+	PUSH {LR}
+	MOV R0,#0
+LOOP_C:
     CMP R0, R1
-	BGE DONE
+	BGT DONE
 	LDR R3, [R2, R0, LSL #2]	
 	STR R3, [R5, R0, LSL #2]	
 	ADD R0,R0, #1
-	B copy_data
+	B LOOP_C
 DONE:
+	POP {LR}
 	MOV PC, LR
 	
 
@@ -143,5 +147,5 @@ stop:
 .data
 N: .dc.l 10
 Data: .dc.l -4,-12,2,6,136,1571,0,56,4,-977
-Data2: .dc.l 0
+Data2: .dS.l MAXN
 SortedData: .ds.l MAXN	
