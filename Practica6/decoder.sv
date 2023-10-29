@@ -7,7 +7,12 @@ module decoder(input logic [1:0] Op,
 					output logic [1:0] FlagW,
 					output logic PCS, RegW, MemW,
 					output logic MemtoReg, ALUSrc,
-					output logic [1:0] ImmSrc, RegSrc, ALUControl);
+					output logic [1:0] ImmSrc, RegSrc, ALUControl
+					output logic Shift //LSL O LSR
+					
+					output logic ASR
+					output logic ROR
+					output logic MOV);
 	// Internal signals
 	logic [9:0] controls;
 	logic Branch, ALUOp;
@@ -35,11 +40,23 @@ module decoder(input logic [1:0] Op,
 	always_comb
 		if (ALUOp) begin // which DP Instr?
 			case(Funct[4:1])
-				4'b0100: ALUControl = 2'b00; // ADD
-				4'b0010: ALUControl = 2'b01; // SUB
-				4'b0000: ALUControl = 2'b10; // AND
-				4'b1100: ALUControl = 2'b11; // ORR
-				default: ALUControl = 2'bx; // unimplemented
+				4'b0100: begin
+							ALUControl = 3'b00; // ADD
+							Shift=1'b0;
+							end
+				4'b0010: begin
+							ALUControl = 3'b01; // SUB
+							Shift=1'b0;
+							end
+				4'b0000: begin
+							ALUControl = 3'b10; // AND
+							Shift=1'b0;
+							end
+				4'b1100: begin
+							ALUControl = 3'b11; // ORR
+							Shift=1'b0;
+							end
+				default: ALUControl = 3'bx; // unimplemented
 			endcase
 
 			// update flags if S bit is set (C & V only for arith)
@@ -54,3 +71,4 @@ module decoder(input logic [1:0] Op,
 	// PC Logic
 	assign PCS = ((Rd == 4'b1111) & RegW) | Branch;
 endmodule
+
