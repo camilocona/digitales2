@@ -56,6 +56,23 @@ module decoder(input logic [1:0] Op,
 							ALUControl = 3'b11; // ORR
 							Shift=1'b0;
 							end
+				//DUDA Numeros case
+				4'b: begin
+							ALUControl = 3'b00; // Shift
+							Shift=1'b0;
+							end
+				4'b????: begin
+							ALUControl = 3'b01; // ASR
+							Shift=1'b0;
+							end
+				4'b????: begin
+							ALUControl = 3'b10; // ROR
+							Shift=1'b0;
+							end
+				4'b????: begin
+							ALUControl = 3'b11; // MOV
+							Shift=1'b0;
+							end
 				default: ALUControl = 3'bx; // unimplemented
 			endcase
 
