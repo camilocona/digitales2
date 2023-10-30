@@ -7,12 +7,12 @@ module decoder(input logic [1:0] Op,
 					output logic [1:0] FlagW,
 					output logic PCS, RegW, MemW,
 					output logic MemtoReg, ALUSrc,
-					output logic [1:0] ImmSrc, RegSrc, ALUControl
-					output logic Shift //LSL O LSR
+					output logic [1:0] ImmSrc, RegSrc, ALUControl //ALUControl estaba de 2:0 en el solu
+					output logic NoWrite;
+					output logic Shift //LSL, LSR, ROR Y ASR
+					output logic MOV
+					output logic B);
 					
-					output logic ASR
-					output logic ROR
-					output logic MOV);
 	// Internal signals
 	logic [9:0] controls;
 	logic Branch, ALUOp;
@@ -38,42 +38,36 @@ module decoder(input logic [1:0] Op,
 
 	// ALU Decoder
 	always_comb
+	
+	//Valores inmediatos
 		if (ALUOp) begin // which DP Instr?
 			case(Funct[4:1])
-				4'b0100: begin
-							ALUControl = 3'b00; // ADD
-							Shift=1'b0;
+				4'b0100: begin ALUControl = 3'b000; // ADD
+									Shift = 1'b0;
+									NoWrite = 1'b0;
 							end
-				4'b0010: begin
-							ALUControl = 3'b01; // SUB
-							Shift=1'b0;
+				4'b0010: begin ALUControl = 3'b001; // SUB
+									Shift = 1'b0;
+									NoWrite = 1'b0;
 							end
-				4'b0000: begin
-							ALUControl = 3'b10; // AND
-							Shift=1'b0;
+				4'b0000: begin ALUControl = 3'b010; // AND
+									Shift = 1'b0;
+									NoWrite = 1'b0;
 							end
-				4'b1100: begin
-							ALUControl = 3'b11; // ORR
-							Shift=1'b0;
+				4'b1100: begin ALUControl = 3'b011; // ORR
+									Shift = 1'b0;
+									NoWrite = 1'b0;
+							end	
+				4'b1101: begin ALUControl = 3'b000; //MOV, ASR, LSL, LSR, ROR
+									Shift = 1'b1;
+									NoWrite = 1'b0;
+							end				
+				4'b0111: begin ALUControl = 3'bxxx; //B salto -> Duda
+									Shift = 1'b0;
+									NoWrite = 1'b0;
 							end
-				//DUDA Numeros case
-				4'b: begin
-							ALUControl = 3'b00; // Shift
-							Shift=1'b0;
-							end
-				4'b????: begin
-							ALUControl = 3'b01; // ASR
-							Shift=1'b0;
-							end
-				4'b????: begin
-							ALUControl = 3'b10; // ROR
-							Shift=1'b0;
-							end
-				4'b????: begin
-							ALUControl = 3'b11; // MOV
-							Shift=1'b0;
-							end
-				default: ALUControl = 3'bx; // unimplemented
+				
+				default: ALUControl = 2'bx; // unimplemented
 			endcase
 
 			// update flags if S bit is set (C & V only for arith)
@@ -83,9 +77,11 @@ module decoder(input logic [1:0] Op,
 			else begin
 				ALUControl = 2'b00; // add for non-DP instructions
 				FlagW = 2'b00; // don't update Flags
+				Shift = 1'b0; // don’t shift
+				NoWrite = 1'b0; // write result
+				
 			end
 			
 	// PC Logic
 	assign PCS = ((Rd == 4'b1111) & RegW) | Branch;
 endmodule
-
