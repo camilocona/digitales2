@@ -9,15 +9,23 @@ module datapath(input logic clk, reset,
 					 input logic [1:0] ALUControl,
 					 input logic MemtoReg,
 					 input logic PCSrc,
+					 //	input logic MOV; -> DOUBT, DECLARATE RIGHT HERE? OR ITS INSIDE SHIFT?
+					 //	input logic B; -> DOUBT ENTRY OR EXIT
 					 output logic [3:0] ALUFlags,
 					 output logic [31:0] PC,
 					 input logic [31:0] Instr,
 					 output logic [31:0] ALUResult, WriteData,
-					 input logic [31:0] ReadData);
+					 input logic [31:0] ReadData,
+					 //input logic carry, -> Doubt (DUDA)
+					 input logic Shift);
+					 
 	// Internal signals
 	logic [31:0] PCNext, PCPlus4, PCPlus8;
 	logic [31:0] ExtImm, SrcA, SrcB, Result;
 	logic [3:0] RA1, RA2;
+	
+	logic [31:0] srcBshifted, ALUResult; // Shift (LSL, LSR, ASR, ROR, MOV)
+
 	
 	// next PC logic
 	mux2 #(32) pcmux(PCPlus4, Result, PCSrc, PCNext);
@@ -33,6 +41,10 @@ module datapath(input logic clk, reset,
 	extend ext(Instr[23:0], ImmSrc, ExtImm);
 
 	// ALU logic
+	
+	shifter sh(WriteData, Instr[11:7], Instr[6:5], srcBshifted); // LSL duda
+	
 	mux2 #(32) srcbmux(WriteData, ExtImm, ALUSrc, SrcB);
-	alu #(32) alu(SrcA, SrcB, ALUControl, ALUResult, ALUFlags);
+	alu #(32) alu(SrcA, SrcB, ALUControl, ALUResult, ALUFlags/*, carry*/); //DOUBT 
+	mux2 #(32) aluresultmux(ALUResult, SrcB, Shift, ALUResultOut); //DUDA
 endmodule
