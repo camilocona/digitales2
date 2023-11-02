@@ -10,7 +10,8 @@ module controller(input logic clk, reset,
 						output logic ALUSrc,
 						output logic [1:0] ALUControl,
 						output logic MemWrite, MemtoReg,
-						output logic PCSrc
+						output logic PCSrc,
+						output logic Shift
 						//output logic Shift //LSL, LSR, ROR Y ASR
 						//output logic MOV
 						//output logic B
@@ -22,7 +23,7 @@ module controller(input logic clk, reset,
 
 	decoder dec(Instr[27:26], Instr[25:20], Instr[15:12],
 					FlagW, PCS, RegW, MemW,
-					MemtoReg, ALUSrc, ImmSrc, RegSrc, ALUControl/*,NoWrite, Shift*/);
+					MemtoReg, ALUSrc, ImmSrc, RegSrc, ALUControl/*,NoWrite*/, Shift);
 
 	condlogic cl(clk, reset, Instr[31:28], ALUFlags,
 					FlagW, PCS, RegW, MemW,
