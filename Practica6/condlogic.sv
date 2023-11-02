@@ -9,7 +9,7 @@ module condlogic(input logic clk, reset,
 						output logic PCSrc, RegWrite,
 						MemWrite
 						//output logic carry -> DUDA
-						input logic NoWrite);
+						/*input logic NoWrite*/);
 	// Internal signals
 	logic [1:0] FlagWrite;
 	logic [3:0] Flags;
@@ -21,11 +21,9 @@ module condlogic(input logic clk, reset,
 	// write controls are conditional
 	condcheck cc(Cond, Flags, CondEx);
 	assign FlagWrite = FlagW & {2{CondEx}};
-	assign RegWrite = RegW & CondEx & ~NoWrite;
+	assign RegWrite = RegW & CondEx;
 	assign MemWrite = MemW & CondEx;
 	assign PCSrc = PCS & CondEx;
-	
-	//assign carry = Flags[1]; // OTHER DOUBT
 endmodule
 
 /*
