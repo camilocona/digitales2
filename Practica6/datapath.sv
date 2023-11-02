@@ -14,14 +14,15 @@ module datapath(input logic clk, reset,
 					 output logic [3:0] ALUFlags,
 					 output logic [31:0] PC,
 					 input logic [31:0] Instr,
-					 output logic [31:0] ALUResult, WriteData,
-					 input logic [31:0] ReadData);
+					 output logic [31:0] ALUResultOut, WriteData,
+					 input logic [31:0] ReadData,
+					 input logic Shift);
 					 //input logic carry, -> Doubt (DUDA)
 					 /*input logic Shift*/
 					 
 // Internal signals
 	logic [31:0] PCNext, PCPlus4, PCPlus8;
-	logic [31:0] ExtImm, SrcA, SrcB, Result,salida_mux,eleccion_pc;
+	logic [31:0] ExtImm, SrcA, SrcB, Result,salida_mux,eleccion_pc,ALUResult;
 	logic [3:0] RA1, RA2;
 	logic [31:0] output_shift;	//Salida del shift
 	
@@ -46,7 +47,8 @@ module datapath(input logic clk, reset,
 	mux2 #(4) reg11(Instr[15:12], 4'b1110,bl,salida_mux);
 	
 	// ALU logic
-	shift Shift (WriteData, Instr[11:5], output_shift);
+	mux2 #(32) ar (ALUResult,SrcB,Shift, ALUResultOut);
+	shift Shift1 (WriteData, Instr[11:5], output_shift);
 	mux2 #(32) srcbmux(output_shift, ExtImm, ALUSrc, SrcB);
 	alu #(32) alu(SrcA, SrcB, ALUControl, ALUResult, ALUFlags);
 endmodule
