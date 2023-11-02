@@ -8,7 +8,8 @@ module decoder(input logic [1:0] Op,
 					output logic PCS, RegW, MemW,
 					output logic MemtoReg, ALUSrc,
 					output logic [1:0] ImmSrc, RegSrc,
-					output logic [2:0]ALUControl);	//ALUControl estaba de 2:0 en el solu
+					output logic [2:0]ALUControl,
+					output logic Shift);	//ALUControl estaba de 2:0 en el solu
 					//output logic NoWrite;
 					//output logic Shift //LSL, LSR, ROR Y ASR
 					//output logic MOV
@@ -38,7 +39,7 @@ module decoder(input logic [1:0] Op,
 		endcase
 		
 		
-	assign {RegSrc, ImmSrc, ALUSrc, MemtoReg, RegW, MemW, Branch, ALUOp} = controls;
+	assign {RegSrc, ImmSrc, ALUSrc, MemtoReg, RegW, MemW, Branch, ALUOp,bl} = controls;
 
 	// ALU Decoder
 	always_comb
@@ -46,12 +47,27 @@ module decoder(input logic [1:0] Op,
 	//Valores inmediatos
 		if (ALUOp) begin // which DP Instr?
 			case(Funct[4:1])
-				4'b0100: ALUControl = 3'b000; // ADD
-				4'b0010: ALUControl = 3'b001; // SUB
-				4'b0000: ALUControl = 3'b010; // AND
-				4'b1100: ALUControl = 3'b011; // ORR
-				default: ALUControl = 3'b101; // MOv
-			endcase
+				4'b0100: begin ALUControl = 3'b000; // ADD
+							Shift = 1'b0;
+							end
+				4'b0010: begin ALUControl = 3'b001; // SUB
+							Shift = 1'b0;
+							end
+				4'b0000: begin ALUControl = 3'b010; // AND
+							Shift = 1'b0;
+							end
+				4'b1100: begin ALUControl = 3'b011; // ORR
+							Shift = 1'b0;
+							end
+				4'b1101: begin ALUControl = 3'b100; 
+							Shift = 1'b1;
+							end
+				default: begin ALUControl = 3'bx;
+							Shift = 1'b0;
+							end
+							
+					endcase
+							// 
 
 			// update flags if S bit is set (C & V only for arith)
 			FlagW[1] = Funct[0];
@@ -68,4 +84,5 @@ module decoder(input logic [1:0] Op,
 	// PC Logic
 	assign PCS = ((Rd == 4'b1111) & RegW) | Branch;
 endmodule
+
 
