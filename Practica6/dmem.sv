@@ -2,7 +2,7 @@
  * This module is the Data Memory of the ARM single-cycle processor
  * It corresponds to the RAM array and some external peripherals
  */ 
-module dmem(input logic clk, we, input logic [31:0] a, wd, output logic [31:0] rd,
+/*module dmem(input logic clk, we, input logic [31:0] a, wd, output logic [31:0] rd,
             input logic [9:0] switches, output logic [9:0] leds);
 	// Internal array for the memory (Only 64 32-words)
 	logic [31:0] RAM[63:0];
@@ -32,4 +32,4 @@ module dmem(input logic clk, we, input logic [31:0] a, wd, output logic [31:0] r
 			else	
 				RAM[a[31:2]] <= wd;
 	end	
-endmodule
+endmodule*/
