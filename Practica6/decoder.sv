@@ -48,22 +48,22 @@ module decoder(input logic [1:0] Op,
 		if (ALUOp) begin // which DP Instr?
 			case(Funct[4:1])
 				4'b0100: begin ALUControl = 3'b000; // ADD
-							Shift = 1'b0;
+							//Shift = 1'b0;
 							end
 				4'b0010: begin ALUControl = 3'b001; // SUB
-							Shift = 1'b0;
+							//Shift = 1'b0;
 							end
 				4'b0000: begin ALUControl = 3'b010; // AND
-							Shift = 1'b0;
+							//Shift = 1'b0;
 							end
 				4'b1100: begin ALUControl = 3'b011; // ORR
-							Shift = 1'b0;
+							//Shift = 1'b0;
 							end
-				4'b1101: begin ALUControl = 3'b100; 
+				/*4'b1101: begin ALUControl = 3'b100; //LSL, 
 							Shift = 1'b1;
-							end
+							end*/
 				default: begin ALUControl = 3'bx;
-							Shift = 1'b0;
+							//Shift = 1'b0;
 							end
 							
 					endcase
@@ -84,5 +84,3 @@ module decoder(input logic [1:0] Op,
 	// PC Logic
 	assign PCS = ((Rd == 4'b1111) & RegW) | Branch;
 endmodule
-
-
