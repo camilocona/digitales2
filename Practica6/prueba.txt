@@ -8,76 +8,30 @@ Counter:
     // Counts up to the value provided by the switches (0xC000_0000)
     // and writes it into the leds (0xC000_0004)
     SUB    R2, R15, R15
+    MOV    R4, #1        // Initialize R4 to 1 for leftward LED sequence
 Loop:
     LDR    R3, [R1]        // Read the switches
 
-    // Customize the LED sequence here for 10 LEDs
-    CMP    R2, #1
-    BEQ    LED1
-    CMP    R2, #2
-    BEQ    LED2
-    CMP    R2, #3
-    BEQ    LED3
-    CMP    R2, #4
-    BEQ    LED4
-    CMP    R2, #5
-    BEQ    LED5
-    CMP    R2, #6
-    BEQ    LED6
-    CMP    R2, #7
-    BEQ    LED7
-    CMP    R2, #8
-    BEQ    LED8
-    CMP    R2, #9
-    BEQ    LED9
-    B      LED10
+    // Customize the LED sequence here for 10 LEDs using bitwise operations
+    STR    R2, [R1, #4]    // Rightward LEDs
+    STR    R4, [R1, #8]    // Leftward LEDs
 
-LED1:
-    MOV    R2, #1
-    STR    R2, [R1, #4]
+    // Rightward LED sequence
+    LSL    R2, R2, #1     // Left shift R2 by 1 to double its value
+    CMP    R2, #1024      // Check if rightward sequence exceeds 1024
+    BEQ    ResetCounterR
+
+    // Leftward LED sequence
+    LSR    R4, R4, #1     // Right shift R4 by 1 to halve its value
+    CMP    R4, #0         // Check if leftward sequence reaches 0
+    BEQ    ResetCounterL
+
     B      Loop
 
-LED2:
-    MOV    R2, #3
-    STR    R2, [R1, #4]
+ResetCounterR:
+    MOV    R2, #1       // Reset rightward sequence to 1
     B      Loop
 
-LED3:
-    MOV    R2, #7
-    STR    R2, [R1, #4]
-    B      Loop
-
-LED4:
-    MOV    R2, #15
-    STR    R2, [R1, #4]
-    B      Loop
-
-LED5:
-    MOV    R2, #31
-    STR    R2, [R1, #4]
-    B      Loop
-
-LED6:
-    MOV    R2, #63
-    STR    R2, [R1, #4]
-    B      Loop
-
-LED7:
-    MOV    R2, #127
-    STR    R2, [R1, #4]
-    B      Loop
-
-LED8:
-    MOV    R2, #255
-    STR    R2, [R1, #4]
-    B      Loop
-
-LED9:
-    MOV    R2, #511
-    STR    R2, [R1, #4]
-    B      Loop
-
-LED10:
-    MOV    R2, #1023
-    STR    R2, [R1, #4]
+ResetCounterL:
+    MOV    R4, #512     // Reset leftward sequence to 512
     B      Loop
