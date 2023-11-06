@@ -4,17 +4,23 @@ _start:
     // when address zero is read using LDR (dmem_to_test_peripherals.dat).
     SUB    R0, R15, R15
     LDR    R1, [R0, #0]    // Loads 0xC000_0000 into R1
-Counter:    
-    // Counts up to the value provided by the switches (0xC000_0000)
-    // and writes it into the leds (0xC000_0004)
-    SUB    R2, R15, R15
-    MOV    R4, #1        // Initialize R4 to 1 for leftward LED sequence
+
+    // Call the function to control LEDs
+    BL     ControlLEDs
+
+    // End the program
+    B      End
+
+ControlLEDs:
+    // Initialize registers
+    SUB    R2, R15, R15   // Initialize R2 for rightward LED sequence
+    MOV    R4, #1         // Initialize R4 for leftward LED sequence
 Loop:
-    LDR    R3, [R1]        // Read the switches
+    LDR    R3, [R1]       // Read the switches
 
     // Customize the LED sequence here for 10 LEDs using bitwise operations
-    STR    R2, [R1, #4]    // Rightward LEDs
-    STR    R4, [R1, #8]    // Leftward LEDs
+    STR    R2, [R1, #4]   // Rightward LEDs
+    STR    R4, [R1, #8]   // Leftward LEDs
 
     // Rightward LED sequence
     LSL    R2, R2, #1     // Left shift R2 by 1 to double its value
@@ -35,3 +41,7 @@ ResetCounterR:
 ResetCounterL:
     MOV    R4, #512     // Reset leftward sequence to 512
     B      Loop
+
+End:
+    // Return from the function
+    BX     LR
