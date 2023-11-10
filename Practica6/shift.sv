@@ -14,7 +14,7 @@ module shift (
 		2'b00: salida = entrada << instruccion [6:2];							 //LSL
 		2'b01: salida = entrada >> instruccion [6:2];							 //LSR
 		2'b10: salida = entrada >>> instruccion [6:2];							 //ASR
-		2'b11: salida = (entrada >> instruccion [6:2]) | (entrada << 32);	 //ROR
+		2'b11: salida = (entrada >> instruccion [6:2]) | (entrada << (32-instruccion[6:2]));	 //ROR
 		endcase
 	end
 endmodule
