@@ -13,10 +13,10 @@ module top(input logic clk, nreset,
 	logic [31:0] PC, Instr, ReadData;
 	
 	// Instantiate instruction memory
-	//imem imem(PC, Instr);
+	imem imem(PC, Instr);
 
 	// Instantiate data memory (RAM + peripherals)
-	//dmem dmem(clk, MemWrite, DataAdr, WriteData, ReadData, switches, leds);
+	dmem dmem(clk, MemWrite, DataAdr, WriteData, ReadData, switches, leds);
 
 	// Instantiate processor
 	arm arm(clk, reset, PC, Instr, MemWrite, DataAdr, WriteData, ReadData);
