@@ -8,15 +8,13 @@ module decoder(input logic [1:0] Op,
 					output logic PCS, RegW, MemW,
 					output logic MemtoReg, ALUSrc,
 					output logic [1:0] ImmSrc, RegSrc,
-					output logic [2:0]ALUControl,
-					output logic Shift);	//ALUControl estaba de 2:0 en el solu
-					//output logic NoWrite;
-					//output logic Shift //LSL, LSR, ROR Y ASR
-					//output logic MOV
-					//output logic B;
+					output logic [2:0] ALUControl,
+					//output logic Shift
+					output logic bl);	//ALUControl estaba de 2:0 en el solu
+
 					
 	// Internal signals
-	logic [9:0] controls;
+	logic [10:0] controls; //Hubo corrección aquí porque estaba de [9:0]
 	logic Branch, ALUOp;
 
 	// Main Decoder
@@ -33,13 +31,13 @@ module decoder(input logic [1:0] Op,
 											// B 
 			2'b10: 	if (~Funct[4])	controls = 11'b01101000100; 
 											//BL
-						else				controls = 11'b01101000101;
+						else				controls = 11'b01101010101;
 											
 			default: 					controls = 11'bx;
 		endcase
 		
 		
-	assign {RegSrc, ImmSrc, ALUSrc, MemtoReg, RegW, MemW, Branch, ALUOp,bl} = controls;
+	assign {RegSrc, ImmSrc, ALUSrc, MemtoReg, RegW, MemW, Branch, ALUOp, bl} = controls;
 
 	// ALU Decoder
 	always_comb
@@ -48,22 +46,24 @@ module decoder(input logic [1:0] Op,
 		if (ALUOp) begin // which DP Instr?
 			case(Funct[4:1])
 				4'b0100: begin ALUControl = 3'b000; // ADD
-							//Shift = 1'b0;
+							
 							end
 				4'b0010: begin ALUControl = 3'b001; // SUB
-							//Shift = 1'b0;
+							
 							end
 				4'b0000: begin ALUControl = 3'b010; // AND
-							//Shift = 1'b0;
+							
 							end
 				4'b1100: begin ALUControl = 3'b011; // ORR
-							//Shift = 1'b0;
+				
 							end
-				/*4'b1101: begin ALUControl = 3'b100; //LSL, 
-							Shift = 1'b1;
-							end*/
+							
+				4'b1101: begin ALUControl = 3'b101; // Manda a la ALUControl 101 para que la ALU haga el BP a través de B
+							end
+			
+			
 				default: begin ALUControl = 3'bx;
-							//Shift = 1'b0;
+							
 							end
 							
 					endcase
@@ -75,7 +75,7 @@ module decoder(input logic [1:0] Op,
 			end 
 			else begin
 				ALUControl = 3'b000; // add for non-DP instructions
-				FlagW = 2'b00; // don't update Flags
+				FlagW = 3'b000; // don't update Flags
 				//Shift = 1'b0; // don’t shift
 				//NoWrite = 1'b0; // write result
 				
